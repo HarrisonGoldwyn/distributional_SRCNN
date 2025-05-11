@@ -16,7 +16,7 @@ from dlkit.nets.conv2d import Conv2dUpscaleModelInterpolate
 
 ## Load model module
 sys.path.append('/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/auxilary_modules') #TODO adjust path
-sys.path.append('/projects/ecrpstats/sr_cnn/paper_repo/auxilary_modules')
+sys.path.append('/projects/ecrpstats/distributional_SRCNN/auxilary_modules')
 import data_loading
 import plotting
 
@@ -47,8 +47,8 @@ try:
 except:
     pass
 try:
-    data_hr = np.load("/projects/ecrpstats/sr_cnn/paper_repo/data/subregions_wind_u_64x64.npy")
-    data_lr = np.load("/projects/ecrpstats/sr_cnn/paper_repo/data/subregions_wind_u_8x8_downscaled64x64.npy")
+    data_hr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_64x64.npy")
+    data_lr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_8x8_downscaled64x64.npy")
 except:
     pass
 

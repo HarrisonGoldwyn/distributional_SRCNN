@@ -59,10 +59,15 @@ if type(subregion) == int:
     data_hr = data_hr[region, subregion]
     data_lr = data_lr[region, subregion]
 elif subregion == 'all':
-    data_hr = data_hr.reshape((5, 4*214, hr_data_size, hr_data_size))
+    ## To order by timeshape, each 4 images being the 4 subregions
     data_hr = data_hr[region]
-    data_lr = data_lr.reshape((5, 4*214, lr_data_size, lr_data_size))
     data_lr = data_lr[region]
+    # Transpose so axis 0 (4) comes after axis 1 (214)
+    data_hr = np.transpose(data_hr, (1, 0, 2, 3))  # shape (214, 4, 64, 64)
+    data_lr = np.transpose(data_lr, (1, 0, 2, 3)) 
+    # Now reshape to (214*4, 64, 64)
+    data_hr = data_hr.reshape((-1, 64, 64))  # shape (856, 64, 64)
+    data_lr = data_lr.reshape((-1, 8, 8))
 else:
     raise ValueError("subregion invalid")
 
@@ -99,14 +104,14 @@ print(f"Using device: {device}")
 # Load data
 
 # %%
+# try:
+#     test_mse_error_fields = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/mse/standard_normed_data/error_fields/mse_5l_i123_c32s_padR_schLrG0p95_reg0_errFields.npy")
+#     train_mse_error_fields = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/mse/standard_normed_data/error_fields/mse_5l_i123_c32s_padR_schLrG0p95_reg0_TrainErrFields.npy")
+# except:
+#     pass
 try:
-    test_mse_error_fields = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/mse/standard_normed_data/error_fields/mse_5l_i123_c32s_padR_schLrG0p95_reg0_errFields.npy")
-    train_mse_error_fields = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/mse/standard_normed_data/error_fields/mse_5l_i123_c32s_padR_schLrG0p95_reg0_TrainErrFields.npy")
-except:
-    pass
-try:
-    test_mse_error_fields = np.load("/projects/ecrpstats/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/mse/standard_norm_data/error_fields/mse_5l_i123_c32s_padR_schLrG0p95_reg0_errFields.npy")
-    train_mse_error_fields = np.load("/projects/ecrpstats/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/mse/standard_norm_data/error_fields/mse_5l_i123_c32s_padR_schLrG0p95_reg0_TrainErrFields.npy")
+    test_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0_errFields.npy")
+    train_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0_TrainErrFields.npy")
 except:
     pass
 
@@ -166,18 +171,14 @@ basis_functions_tensor = torch.tensor(basis_functions, dtype=torch.complex64).to
 ##
 ## Load parameters for global prior
 try:
-    global_fit_params = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/fourier_proj_cov/global_params/anal_sln_global_params.npy")
-except:
-    pass
-try:
-    global_fit_params = np.load("/projects/ecrpstats/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/fourier_proj_cov/global_params/anal_sln_global_params.npy")
+    global_fit_params = np.load("/projects/ecrpstats/distributional_SRCNN/stage_2/anal_sln_global_params.npy")
 except:
     pass
 
-global_fit_params = torch.tensor(global_fit_params).to(device)
+global_fit_params = torch.tensor(global_fit_params, dtype=torch.float32).to(device)
 
 ## Load emperical standard deviation for parameter prior
-global_fit_param_stdd = np.load("/projects/ecrpstats/sr_cnn/real_data/torch/scripts/interp_upscale/HR_64x64/fourier_proj_cov/global_params/img_spec_params_std_rescaled.npy")
+global_fit_param_stdd = np.load("/projects/ecrpstats/distributional_SRCNN/stage_2/img_spec_params_std.npy")
 global_fit_param_stdd = torch.tensor(global_fit_param_stdd).to(device)
 
 
@@ -210,7 +211,7 @@ def gaussian_loss_basis_cov(
     )
 
     # log_part = torch.sum(torch.log(log_parmas))
-    d = N**2
+    # d = N**2
     log_part = torch.sum(
         log_parmas 
         # * (d+1)

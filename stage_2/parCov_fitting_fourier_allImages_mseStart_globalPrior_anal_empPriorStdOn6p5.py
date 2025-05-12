@@ -29,6 +29,8 @@ batch_size = 32
 ##
 region = 0
 subregion = 'all'
+## emperical standard deviation scale
+scale_factor = 6.5
 
 log_file_base_path = os.path.basename(__file__)[:-3]
 print(f"Running {log_file_base_path}")
@@ -139,7 +141,7 @@ def gaussian_loss_basis_cov(
         ):
     
     ## Define global prior
-    prior = (global_fit_params - torch.exp(log_parmas))**2 / (global_fit_param_stdd / 3.5)**2
+    prior = (global_fit_params - torch.exp(log_parmas))**2 / (global_fit_param_stdd / scale_factor)**2
     
     ## Change type of real parameters to complex for consistent typing with complex basis functions
     log_parmas = torch.complex(log_parmas, torch.zeros_like(log_parmas))

@@ -1,6 +1,3 @@
-# %%
-# %%
-# %%
 import os
 import sys
 import numpy as np
@@ -16,13 +13,11 @@ from dlkit.opt.train import train_epochs
 from dlkit.nets.conv2d import Conv2dUpscaleModelInterpolate
 
 ## Load model module
-sys.path.append('/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/synthetic_data/torch_models') #TODO adjust path
-sys.path.append('/projects/ecrpstats/sr_cnn/synthetic_data/torch_models')
+sys.path.append('/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/auxilary_modules') #TODO adjust path
+sys.path.append('/projects/ecrpstats/distributional_SRCNN/auxilary_modules')
+import data_loading
 
 import matplotlib.pyplot as plt
-
-# import pandas as pd
-
 
 train_or_load = 'train'
 # %%
@@ -32,8 +27,6 @@ lr_data_size = 8
 epochs = 300
 batch_size = 32
 ##
-num_sing_mode = 50
-##
 region = 0
 subregion = 'all'
 
@@ -42,54 +35,12 @@ print(f"Running {log_file_base_path}")
 
 save_path = f'{log_file_base_path}.pt'
 
-## ~~~~~~~~~~~
-## import data
-try:
-    data_hr = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/data/subregions_wind_u_64x64.npy")
-    data_lr = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/data/subregions_wind_u_8x8_downscaled64x64.npy")
-except:
-    pass
-try:
-    data_hr = np.load("/projects/ecrpstats/sr_cnn/real_data/data/subregions_wind_u_64x64.npy")
-    data_lr = np.load("/projects/ecrpstats/sr_cnn/real_data/data/subregions_wind_u_8x8_downscaled64x64.npy")
-except:
-    pass
-
-if type(subregion) == int:
-    data_hr = data_hr[region, subregion]
-    data_lr = data_lr[region, subregion]
-elif subregion == 'all':
-    ## To order by timeshape, each 4 images being the 4 subregions
-    data_hr = data_hr[region]
-    data_lr = data_lr[region]
-    # Transpose so axis 0 (4) comes after axis 1 (214)
-    data_hr = np.transpose(data_hr, (1, 0, 2, 3))  # shape (214, 4, 64, 64)
-    data_lr = np.transpose(data_lr, (1, 0, 2, 3)) 
-    # Now reshape to (214*4, 64, 64)
-    data_hr = data_hr.reshape((-1, 64, 64))  # shape (856, 64, 64)
-    data_lr = data_lr.reshape((-1, 8, 8))
-else:
-    raise ValueError("subregion invalid")
-
-# %%
-train_set_size = int(data_hr.shape[0] * .7)
-test_set_size = data_hr.shape[0] - train_set_size
-
-# %%
-## Normalize data
-raw_std = data_hr.std()
-data_hr = data_hr / raw_std
-rescaled_mean = data_hr.mean()
-data_hr = data_hr - rescaled_mean
-data_lr = data_lr / raw_std - rescaled_mean
-
-# %%
-## Get train and test sets
-xtrainHR = data_hr[:train_set_size].astype(np.float32)[:, None, :, :] 
-xtestHR = data_hr[train_set_size:train_set_size+test_set_size].astype(np.float32)[:, None, :, :] 
-xtrainLR = data_lr[:train_set_size].astype(np.float32)[:, None, :, :] 
-xtestLR = data_lr[train_set_size:train_set_size+test_set_size].astype(np.float32)[:, None, :, :]     
-
+## ~~~~~~~~~~~## import data
+xtrainHR, xtestHR, xtrainLR, xtestLR = data_loading.import_data(
+    region,
+    subregion,
+    train_fraction=.7, 
+    )
 # %%
 device = (
     "cuda"

@@ -13,10 +13,6 @@ from torch.utils.data import TensorDataset, DataLoader
 sys.path.append('/projects/ecrpstats/dl-kit') #TODO adjust path
 sys.path.append('/Users/hgoldwyn/Research/projects/SR_CNN/dl-kit')
 
-# %%
-## General params
-hr_data_size = 56
-lr_data_size = 8
 
 # %%
 
@@ -24,6 +20,8 @@ def import_data(
     region,
     subregion,
     train_fraction=.7, 
+    hr_data_size=64,
+    lr_data_size=8,
     order='(subregion, time)'
     ):
 

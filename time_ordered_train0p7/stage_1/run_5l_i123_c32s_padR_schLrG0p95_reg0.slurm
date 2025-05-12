@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=reg0
-#SBATCH --output=reg0.log
+#SBATCH --job-name=to_reg0
+#SBATCH --output=to_reg0.log
 #SBATCH --account=ecrpstats
 #SBATCH --time=02:00:00
 #SBATCH --nodes=1

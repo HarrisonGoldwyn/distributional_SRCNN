@@ -21,59 +21,57 @@ lr_data_size = 8
 # %%
 
 def import_data(
-    synth_data_dir='', 
-    train_test_split=856, 
-    batch_size=32
+    region,
+    subregion,
+    train_fraction=.7, 
     ):
 
-    if not os.path.exists(synth_data_dir):
-        ## try local data dir
-        local_data_dir = "/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/synthetic_data/data/"
-        kestrel_data_dir = "/projects/ecrpstats/sr_cnn/synthetic_data/data/"
-        if os.path.exists(local_data_dir):
-            synth_data_dir = local_data_dir
-        ## try kestrel
-        elif os.path.exists(kestrel_data_dir):
-            synth_data_dir = kestrel_data_dir
-        else: 
-            return ValueError("can't find data path")
-    else: 
-        ## path is arg is fine
+    try:
+        data_hr = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/data/subregions_wind_u_64x64.npy")
+        data_lr = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/data/subregions_wind_u_8x8_downscaled64x64.npy")
+    except:
         pass
-    
-    x_HR = np.loadtxt(synth_data_dir + "synthetic_gaussian_data_HR.txt")
-    x_LR = np.loadtxt(synth_data_dir + "synthetic_gaussian_data_LR.txt")
-    # x_HR = np.loadtxt(synth_data_dir + "synthetic_gaussian_data_HR.txt")
-    # x_LR = np.loadtxt(synth_data_dir + "synthetic_gaussian_data_LR.txt")
+    try:
+        data_hr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_64x64.npy")
+        data_lr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_8x8_downscaled64x64.npy")
+    except:
+        pass
 
-    ## rescale data, this was emperical
-    x_HR = x_HR / 9 + 0.5
-    x_LR = x_LR / 9 + 0.5
+    if type(subregion) == int:
+        data_hr = data_hr[region, subregion]
+        data_lr = data_lr[region, subregion]
+    elif subregion == 'all':
+        
+        ## To order by timeshape, each 4 images being the 4 subregions
+        data_hr = data_hr[region]
+        data_lr = data_lr[region]
+        # Transpose so axis 0 (4) comes after axis 1 (214)
+        data_hr = np.transpose(data_hr, (1, 0, 2, 3))  # shape (214, 4, 64, 64)
+        data_lr = np.transpose(data_lr, (1, 0, 2, 3)) 
+        # Now reshape to (214*4, 64, 64)
+        data_hr = data_hr.reshape((-1, 64, 64))  # shape (856, 64, 64)
+        data_lr = data_lr.reshape((-1, 8, 8))
+    else:
+        raise ValueError("subregion invalid")
 
-    train_test_split = batch_size*(train_test_split//batch_size)
-    xtrainHR = x_HR[:train_test_split]
-    xtestHR =  x_HR[train_test_split:]
-    xtrainLR = x_LR[:train_test_split]
-    xtestLR =  x_LR[train_test_split:]
+    # %%
+    train_set_size = int(data_hr.shape[0] * train_fraction)
+    test_set_size = data_hr.shape[0] - train_set_size
 
-    (
-        xtrainHR,
-        xtestHR,
-        xtrainLR,
-        xtestLR,
-        ) = (
-            xtrainHR.astype(np.float32).reshape((-1, 1, hr_data_size, hr_data_size)),
-            xtestHR.astype(np.float32).reshape((-1, 1, hr_data_size, hr_data_size)),
-            xtrainLR.astype(np.float32).reshape((-1, 1, lr_data_size, lr_data_size)),
-            xtestLR.astype(np.float32).reshape((-1, 1, lr_data_size, lr_data_size)),
-            )
+    # %%
+    ## Normalize data
+    raw_std = data_hr.std()
+    data_hr = data_hr / raw_std
+    rescaled_mean = data_hr.mean()
+    data_hr = data_hr - rescaled_mean
+    data_lr = data_lr / raw_std - rescaled_mean
 
-    print('########################################')
-    print('Reshaped data')
-    print('- xtrainHR', xtrainHR.shape)
-    print('- xtestHR ', xtestHR .shape)
-    print('- xtrainLR', xtrainLR.shape)
-    print('- xtestLR ', xtestLR .shape)
+    # %%
+    ## Get train and test sets
+    xtrainHR = data_hr[:train_set_size].astype(np.float32)[:, None, :, :] 
+    xtestHR = data_hr[train_set_size:train_set_size+test_set_size].astype(np.float32)[:, None, :, :] 
+    xtrainLR = data_lr[:train_set_size].astype(np.float32)[:, None, :, :] 
+    xtestLR = data_lr[train_set_size:train_set_size+test_set_size].astype(np.float32)[:, None, :, :]         
 
     return xtrainHR, xtestHR, xtrainLR, xtestLR
 

@@ -24,6 +24,7 @@ def import_data(
     region,
     subregion,
     train_fraction=.7, 
+    order='(subregion, time)'
     ):
 
     try:
@@ -40,17 +41,26 @@ def import_data(
     if type(subregion) == int:
         data_hr = data_hr[region, subregion]
         data_lr = data_lr[region, subregion]
-    elif subregion == 'all':
+    
+    elif subregion == 'all':    
+        if order == '(subregion, time)':
+            ## To order by timeshape, each 4 images being the 4 subregions
+            data_hr = data_hr[region]
+            data_lr = data_lr[region]
+            # Transpose so axis 0 (4) comes after axis 1 (214)
+            data_hr = np.transpose(data_hr, (1, 0, 2, 3))  # shape (214, 4, 64, 64)
+            data_lr = np.transpose(data_lr, (1, 0, 2, 3)) 
+            # Now reshape to (214*4, 64, 64)
+            data_hr = data_hr.reshape((-1, 64, 64))  # shape (856, 64, 64)
+            data_lr = data_lr.reshape((-1, 8, 8))
+        elif order == '(time, subregion)':
+            data_hr = data_hr.reshape((5, 4*214, hr_data_size, hr_data_size))
+            data_hr = data_hr[region]
+            data_lr = data_lr.reshape((5, 4*214, lr_data_size, lr_data_size))
+            data_lr = data_lr[region]
+        else: 
+            raise ValueError("Unimplimented 'order'")
         
-        ## To order by timeshape, each 4 images being the 4 subregions
-        data_hr = data_hr[region]
-        data_lr = data_lr[region]
-        # Transpose so axis 0 (4) comes after axis 1 (214)
-        data_hr = np.transpose(data_hr, (1, 0, 2, 3))  # shape (214, 4, 64, 64)
-        data_lr = np.transpose(data_lr, (1, 0, 2, 3)) 
-        # Now reshape to (214*4, 64, 64)
-        data_hr = data_hr.reshape((-1, 64, 64))  # shape (856, 64, 64)
-        data_lr = data_lr.reshape((-1, 8, 8))
     else:
         raise ValueError("subregion invalid")
 

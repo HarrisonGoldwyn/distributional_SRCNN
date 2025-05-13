@@ -137,7 +137,7 @@ scheduler = ExponentialDecayWithFloor(optimizer, decay_rate=0.95, floor=0.0001)
 # except:
 #     pass
 
-fit_params = np.load("/projects/ecrpstats/distributional_SRCNN/stage_2/anal_sln_global_params.npy")
+fit_params = np.real(np.load("/projects/ecrpstats/distributional_SRCNN/time_ordered_train0p7/stage_2/anal_sln_global_params.npy"))
 fit_params = torch.tensor(fit_params).to(device)
 
 ## Define basis functions
@@ -256,7 +256,7 @@ def mse_loss(outputs, targets):
 ## ~~~~~~~~~~~
 if train_or_load == 'train':
     ## Load previous model to train off of learned weights
-    desired_file = "/projects/ecrpstats/distributional_SRCNN/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0/2025-05-11_t130753/499_l6.889e+01.pt"
+    desired_file = "/projects/ecrpstats/distributional_SRCNN/time_ordered_train0p7/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0/2025-05-12_t165012/499_l8.205e+01.pt"
     loaded = torch.load(desired_file)
     net.load_state_dict(loaded['model_state_dict'])
     

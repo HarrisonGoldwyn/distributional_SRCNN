@@ -15,8 +15,8 @@ from dlkit.opt.train import train_epochs
 from dlkit.nets.conv2d import Conv2dUpscaleModelInterpolate
 
 ## Load model module
-sys.path.append('/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/synthetic_data/torch_models') #TODO adjust path
-sys.path.append('/projects/ecrpstats/sr_cnn/synthetic_data/torch_models')
+sys.path.append('/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/auxilary_modules') #TODO adjust path
+sys.path.append('/projects/ecrpstats/distributional_SRCNN/auxilary_modules')
 import data_loading
 import plotting
 

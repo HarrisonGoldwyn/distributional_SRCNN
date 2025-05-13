@@ -55,7 +55,8 @@ save_path = f'{log_file_base_path}.pt'
 xtrainHR, xtestHR, xtrainLR, xtestLR = data_loading.import_data(
     region,
     subregion,
-    train_fraction=.7, 
+    train_fraction=.7,
+    order='(time, subregion)' 
     )      
 
 # set device

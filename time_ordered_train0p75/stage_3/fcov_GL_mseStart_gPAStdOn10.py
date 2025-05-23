@@ -295,7 +295,7 @@ def mse_loss(outputs, targets):
 ## ~~~~~~~~~~~
 if train_or_load == 'train':
     ## Load previous model to train off of learned weights
-    desired_file = "/projects/ecrpstats/distributional_SRCNN/time_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0/2025-05-13_t161143/499_l4.002e+03.pt"
+    desired_file = "/projects/ecrpstats/distributional_SRCNN/time_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0/2025-05-22_t130203/499_l8.455e+01.pt"
     loaded = torch.load(desired_file)
     net.load_state_dict(loaded['model_state_dict'])
     

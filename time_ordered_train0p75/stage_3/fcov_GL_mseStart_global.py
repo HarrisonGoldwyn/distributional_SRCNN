@@ -129,7 +129,7 @@ scheduler = ExponentialDecayWithFloor(optimizer, decay_rate=0.95, floor=0.0001)
 
 ## Load fit parameters
 fit_params = np.load("/projects/ecrpstats/distributional_SRCNN/time_ordered_train0p75/stage_2/anal_sln_global_params.npy")
-fit_params = torch.tensor(fit_params).to(device)
+fit_params = torch.tensor(fit_paramsdtype=torch.float32).to(device)
 
 ## Define basis functions
 def compl_dft_basis(x, y, k_x, k_y):

@@ -60,24 +60,13 @@ if __name__ == "__main__":
 
     ## analytic results with correct downscaling
     
-    # p2p5_cov_params = np.load(
-    #     "/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/torch/scripts/" \
-    #     "parCov_fitting/mse/params_from_kestrel/with_00_mode/" \
-    #     "parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn2p5_param_fits.npy"
-    #     )
-    p2p5_cov_params = np.load(
-        "/projects/ecrpstats/sr_cnn/real_data/torch/" \
-        "scripts/parCov_fitting/mse/" \
-        "parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn2p5_param_fits.npy")
+    p5p5_cov_params = np.load(
+        "/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/" \
+        "parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn5p5_param_fits.npy")
 
-    # p2p5_err = np.load(
-    #     "/Users/hgoldwyn/Research/projects/SR_CNN/sr_cnn/real_data/torch/scripts/" \
-    #     "interp_upscale/HR_64x64/fourier_proj_cov/from_kestrel/with_00_mode/" \
-    #     "fcov_GL_mseStart_gPAStdOn2p5_errFields.npy")
-    
 
-    for i in range(len(p2p5_cov_params)):
-        _noise, _Z = get_noise_from_cov_params_wSVD(p2p5_cov_params[i], n_samples=100)
+    for i in range(len(p5p5_cov_params)):
+        _noise, _Z = get_noise_from_cov_params_wSVD(p5p5_cov_params[i], n_samples=100)
 
         np.save(f'p2p5_img_{i}_noise_samples.npy', _noise)
         np.save(f'p2p5_img_{i}_noise_Z.npy', _Z)

@@ -1,5 +1,7 @@
 import numpy as np
 
+model_identifier_str = '{model_identifier_str}'
+
 hr_data_size = 64
 N = 64
 
@@ -60,13 +62,12 @@ if __name__ == "__main__":
 
     ## analytic results with correct downscaling
     
-    p5p5_cov_params = np.load(
-        "/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/" \
-        "parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn5p5_param_fits.npy")
+    _cov_params = np.load(
+        f"/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn{model_identifier_str}_param_fits.npy")
 
 
-    for i in range(len(p5p5_cov_params)):
-        _noise, _Z = get_noise_from_cov_params_wSVD(p5p5_cov_params[i], n_samples=100)
+    for i in range(len(_cov_params)):
+        _noise, _Z = get_noise_from_cov_params_wSVD(_cov_params[i], n_samples=100)
 
-        np.save(f'p2p5_img_{i}_noise_samples.npy', _noise)
-        np.save(f'p2p5_img_{i}_noise_Z.npy', _Z)
+        np.save(f'p{model_identifier_str}_img_{i}_noise_samples.npy', _noise)
+        np.save(f'p{model_identifier_str}_img_{i}_noise_Z.npy', _Z)

@@ -1,4 +1,6 @@
+import sys
 import numpy as np
+
 
 model_identifier_str = '{model_identifier_str}'
 
@@ -66,8 +68,9 @@ if __name__ == "__main__":
         f"../stage_2/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn{model_identifier_str}_param_fits.npy")
 
 
-    for i in range(len(_cov_params)):
-        _noise, _Z = get_noise_from_cov_params_wSVD(_cov_params[i], n_samples=100)
+    index = int(sys.argv[1])  # Get index from command line
 
-        np.save(f'p{model_identifier_str}_img_{i}_noise_samples.npy', _noise)
-        np.save(f'p{model_identifier_str}_img_{i}_noise_Z.npy', _Z)
+    _noise, _Z = get_noise_from_cov_params_wSVD(_cov_params[index], n_samples=100)
+
+    np.save(f'p{model_identifier_str}_img_{index}_noise_samples.npy', _noise)
+    np.save(f'p{model_identifier_str}_img_{index}_noise_Z.npy', _Z)

@@ -2,7 +2,7 @@ import sys
 import numpy as np
 
 
-model_identifier_str = '{model_identifier_str}'
+model_identifier_str = '5p5'
 
 hr_data_size = 64
 N = 64

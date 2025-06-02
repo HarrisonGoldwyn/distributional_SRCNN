@@ -65,7 +65,7 @@ if __name__ == "__main__":
     ## analytic results with correct downscaling
     
     _cov_params = np.load(
-        f"../stage_2/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn{model_identifier_str}_param_fits.npy")
+        f"../../stage_2/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn{model_identifier_str}_param_fits.npy")
 
 
     index = int(sys.argv[1])  # Get index from command line

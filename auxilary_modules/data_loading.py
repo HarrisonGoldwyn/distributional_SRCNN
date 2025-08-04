@@ -1,10 +1,10 @@
-import os
+# import os
 import sys
 import numpy as np
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.utils.data import TensorDataset, DataLoader
+# import torch
+# import torch.nn as nn
+# import torch.nn.functional as F
+# from torch.utils.data import TensorDataset, DataLoader
 
 #import matplotlib.pyplot as plt
 
@@ -62,9 +62,6 @@ def import_data(
     else:
         raise ValueError("subregion invalid")
 
-    # %%
-    train_set_size = int(data_hr.shape[0] * train_fraction)
-    test_set_size = data_hr.shape[0] - train_set_size
 
     # %%
     ## Normalize data
@@ -75,6 +72,9 @@ def import_data(
     data_lr = data_lr / raw_std - rescaled_mean
 
     # %%
+    train_set_size = int(data_hr.shape[0] * train_fraction)
+    test_set_size = data_hr.shape[0] - train_set_size
+    # %%
     ## Get train and test sets
     xtrainHR = data_hr[:train_set_size].astype(np.float32)[:, None, :, :] 
     xtestHR = data_hr[train_set_size:train_set_size+test_set_size].astype(np.float32)[:, None, :, :] 
@@ -84,12 +84,12 @@ def import_data(
     return xtrainHR, xtestHR, xtrainLR, xtestLR
 
 # %%
-def create_dataloader(x, y, batch_size, labels=None, train_kwargs={'shuffle':False, 'drop_last':False}):
-    x = torch.from_numpy(x)
-    y = torch.from_numpy(y)
-    if labels is None:
-        dataset = TensorDataset(x, y)
-    else: 
-        dataset = TensorDataset(x, y, labels)
-    dataloader = DataLoader(dataset, batch_size=batch_size, **train_kwargs)
-    return dataloader
+# def create_dataloader(x, y, batch_size, labels=None, train_kwargs={'shuffle':False, 'drop_last':False}):
+#     x = torch.from_numpy(x)
+#     y = torch.from_numpy(y)
+#     if labels is None:
+#         dataset = TensorDataset(x, y)
+#     else: 
+#         dataset = TensorDataset(x, y, labels)
+#     dataloader = DataLoader(dataset, batch_size=batch_size, **train_kwargs)
+#     return dataloader

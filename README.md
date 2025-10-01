@@ -1,6 +1,6 @@
 # Distributional Super-Resolution Convolutional Neural Network
 
-This repo contains the implementation of a CNN trained on a multidimentional distributional loss function, will code and data to reproduce all results, analysis, and figures contained in submitted paper [**Multidimensional Distributional Neural Network Output Demonstrated in Super-Resolution of Surface Wind Speed**](arxiv.org/our_paper)
+This repo contains the implementation of a CNN trained on a multidimentional distributional loss function, will code and data to reproduce all results, analysis, and figures contained in submitted paper [**Multidimensional Distributional Neural Network Output Demonstrated in Super-Resolution of Surface Wind Speed**](https://arxiv.org/pdf/2508.16686)
 
 ## Repo Structure
 This repository contains our 3-stage framework for estimating mean and covariance with a CNN trained on a multidimensional Gaussian loss function over heteroscedastic data. Analysis for the publication was conducted in directory [sr_ordered_train0p75/](./sr_ordered_train0p75), named after the "subregion-ordered" data with a 75/25 train/test split. The specific data used is discussed in the publication. 

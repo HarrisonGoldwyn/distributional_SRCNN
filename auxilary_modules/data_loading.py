@@ -1,10 +1,10 @@
 # import os
 import sys
 import numpy as np
-# import torch
-# import torch.nn as nn
-# import torch.nn.functional as F
-# from torch.utils.data import TensorDataset, DataLoader
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.utils.data import TensorDataset, DataLoader
 
 #import matplotlib.pyplot as plt
 
@@ -89,3 +89,14 @@ def import_data(
     normed_xtestLR = normalize(xtestLR)
 
     return normed_xtrainHR, normed_xtestHR, normed_xtrainLR, normed_xtestLR
+
+
+def create_dataloader(x, y, batch_size, labels=None, train_kwargs={'shuffle':False, 'drop_last':False}):
+    x = torch.from_numpy(x)
+    y = torch.from_numpy(y)
+    if labels is None:
+        dataset = TensorDataset(x, y)
+    else: 
+        dataset = TensorDataset(x, y, labels)
+    dataloader = DataLoader(dataset, batch_size=batch_size, **train_kwargs)
+    return dataloader

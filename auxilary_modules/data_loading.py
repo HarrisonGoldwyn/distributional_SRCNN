@@ -31,8 +31,8 @@ def import_data(
     except Exception as e:
         print("failed to find data in /Users/...:", e)
     try:
-        data_hr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_64x64.npy")
-        data_lr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_8x8_downscaled64x64.npy")
+        data_hr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_64x64.npy",  allow_pickle=True)
+        data_lr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_8x8_downscaled64x64.npy",  allow_pickle=True)
     except Exception as e:
         print("failed to find data in /projects/...:", e)
 

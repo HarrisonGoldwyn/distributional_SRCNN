@@ -28,13 +28,14 @@ def import_data(
     try:
         data_hr = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/data/subregions_wind_u_64x64.npy")
         data_lr = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/data/subregions_wind_u_8x8_downscaled64x64.npy")
-    except:
-        pass
+    except Exception as e:
+        print("failed to find data in /Users/...:", e)
     try:
         data_hr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_64x64.npy")
         data_lr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_8x8_downscaled64x64.npy")
-    except:
-        pass
+    except Exception as e:
+        print("failed to find data in /projects/...:", e)
+
 
     if type(subregion) == int:
         data_hr = data_hr[region, subregion]

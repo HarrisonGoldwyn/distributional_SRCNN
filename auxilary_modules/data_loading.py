@@ -62,34 +62,29 @@ def import_data(
     else:
         raise ValueError("subregion invalid")
 
-
-    # %%
-    ## Normalize data
-    raw_std = data_hr.std()
-    data_hr = data_hr / raw_std
-    rescaled_mean = data_hr.mean()
-    data_hr = data_hr - rescaled_mean
-    data_lr = data_lr / raw_std - rescaled_mean
-
-    # %%
+    ## Separate train and test
     train_set_size = int(data_hr.shape[0] * train_fraction)
     test_set_size = data_hr.shape[0] - train_set_size
-    # %%
     ## Get train and test sets
-    xtrainHR = data_hr[:train_set_size].astype(np.float32)[:, None, :, :] 
-    xtestHR = data_hr[train_set_size:train_set_size+test_set_size].astype(np.float32)[:, None, :, :] 
-    xtrainLR = data_lr[:train_set_size].astype(np.float32)[:, None, :, :] 
-    xtestLR = data_lr[train_set_size:train_set_size+test_set_size].astype(np.float32)[:, None, :, :]         
+    xtrainHR = data_hr[:train_set_size].astype(np.float32)#[:, None, :, :] 
+    xtestHR = data_hr[train_set_size:train_set_size+test_set_size].astype(np.float32)#[:, None, :, :] 
+    xtrainLR = data_lr[:train_set_size].astype(np.float32)#[:, None, :, :] 
+    xtestLR = data_lr[train_set_size:train_set_size+test_set_size].astype(np.float32)#[:, None, :, :]   
 
-    return xtrainHR, xtestHR, xtrainLR, xtestLR
+    ## Normalize data
+    # raw_std = data_hr.std()
+    # data_hr = data_hr / raw_std
+    # rescaled_mean = data_hr.mean()
+    # data_hr = data_hr - rescaled_mean
+    # data_lr = data_lr / raw_std - rescaled_mean
+    def normalize(data):
+        std = data.std()
+        mean = data.mean()
+        return ((data - mean) / std)
+    
+    normed_xtrainHR = normalize(xtrainHR)
+    normed_xtestHR = normalize(xtestHR)
+    normed_xtrainLR = normalize(xtrainLR)
+    normed_xtestLR = normalize(xtestLR)
 
-# %%
-# def create_dataloader(x, y, batch_size, labels=None, train_kwargs={'shuffle':False, 'drop_last':False}):
-#     x = torch.from_numpy(x)
-#     y = torch.from_numpy(y)
-#     if labels is None:
-#         dataset = TensorDataset(x, y)
-#     else: 
-#         dataset = TensorDataset(x, y, labels)
-#     dataloader = DataLoader(dataset, batch_size=batch_size, **train_kwargs)
-#     return dataloader
+    return normed_xtrainHR, normed_xtestHR, normed_xtrainLR, normed_xtestLR

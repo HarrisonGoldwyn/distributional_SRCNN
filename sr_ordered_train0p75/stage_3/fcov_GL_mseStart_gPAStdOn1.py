@@ -135,7 +135,7 @@ scheduler = ExponentialDecayWithFloor(optimizer, decay_rate=0.95, floor=0.0001)
 # except:
 #     pass
 try:
-    fit_params = np.load(f"/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn{scale_factor_str}_param_fits.npy")
+    fit_params = np.load(f"/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/output/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn{scale_factor_str}_param_fits.npy")
 except:
     pass
 

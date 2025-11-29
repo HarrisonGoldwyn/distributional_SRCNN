@@ -62,15 +62,15 @@ print(f"Using device: {device}")
 # except:
 #     pass
 try:
-    test_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0_errFields.npy")
+    #     test_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0_errFields.npy")
     train_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0_TrainErrFields.npy")
 except:
     pass
 
 
 # %%
-mse_error_fields = np.concatenate((train_mse_error_fields, test_mse_error_fields), axis=0)
-
+# mse_error_fields = np.concatenate((train_mse_error_fields, test_mse_error_fields), axis=0)
+mse_error_fields = train_mse_error_fields
 
 # %% [markdown]
 # Define basis functions

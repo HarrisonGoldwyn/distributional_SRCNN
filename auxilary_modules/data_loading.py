@@ -83,10 +83,10 @@ def import_data(
         mean = data.mean()
         return ((data - mean) / std)
     
-    normed_xtrainHR = normalize(xtrainHR)
-    normed_xtestHR = normalize(xtestHR)
-    normed_xtrainLR = normalize(xtrainLR)
-    normed_xtestLR = normalize(xtestLR)
+    normed_xtrainHR = normalize(xtrainHR)[:, None, :, :] 
+    normed_xtestHR = normalize(xtestHR)[:, None, :, :] 
+    normed_xtrainLR = normalize(xtrainLR)[:, None, :, :] 
+    normed_xtestLR = normalize(xtestLR)[:, None, :, :] 
 
     return normed_xtrainHR, normed_xtestHR, normed_xtrainLR, normed_xtestLR
 

@@ -89,8 +89,8 @@ class LowKFullSpectrumNet(nn.Module):
 # Dataset (low-k targets only)
 # ============================================================
 class SpectrumDataset(Dataset):
-    def __init__(self, error_fields, t_low):
-        self.x = torch.tensor(error_fields, dtype=torch.float32).unsqueeze(1)
+    def __init__(self, mean_fields, t_low):
+        self.x = torch.tensor(mean_fields, dtype=torch.float32).unsqueeze(1)
         self.t = torch.tensor(t_low, dtype=torch.float32)
 
     def __len__(self):
@@ -104,7 +104,7 @@ class SpectrumDataset(Dataset):
 # Training
 # ============================================================
 def train_spectrum_predictor(
-    error_fields,
+    mean_fields,
     t_train_low,
     lowk_idx,
     n_epochs=40,
@@ -113,7 +113,7 @@ def train_spectrum_predictor(
 ):
     model = LowKFullSpectrumNet(lowk_idx).to(device)
 
-    ds = SpectrumDataset(error_fields, t_train_low)
+    ds = SpectrumDataset(mean_fields, t_train_low)
     loader = DataLoader(ds, batch_size=batch_size, shuffle=True)
 
     opt = torch.optim.Adam(model.parameters(), lr=lr)
@@ -149,7 +149,7 @@ def train_spectrum_predictor(
 # ============================================================
 def save_predictions(
     model,
-    error_fields,
+    mean_fields,
     lowk_idx,
     s_global,
     outfile_prefix="train"
@@ -159,7 +159,7 @@ def save_predictions(
     log_s_global_t = torch.tensor(log_s_global, dtype=torch.float32)
 
     model.eval()
-    ds = torch.tensor(error_fields, dtype=torch.float32).unsqueeze(1)
+    ds = torch.tensor(mean_fields, dtype=torch.float32).unsqueeze(1)
     loader = DataLoader(ds, batch_size=64, shuffle=False)
 
     full_preds = []
@@ -195,13 +195,15 @@ def save_predictions(
 # ============================================================
 if __name__ == "__main__":
 
+
     # ------------------------------
     # Load inputs
     # ------------------------------
-    error_fields = np.load("../stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0_TrainErrFields.npy")
+    test_mean_fields = np.load("../stage_1/output_data/mse_5l_i123_c32s_padR_schLrG0p95_reg0_testPredFields.npy")
+    train_mean_fields = np.load("../stage_1/output_data/mse_5l_i123_c32s_padR_schLrG0p95_reg0_trainPredFields.npy")
     s_train = np.load("../stage_2/output/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn4p5_param_fits.npy")
 
-    print("error_fields shape:", error_fields.shape)
+    print("mean_fields shape:", train_mean_fields.shape)
     print("s_train shape:", s_train.shape)
 
     # ------------------------------
@@ -246,7 +248,7 @@ if __name__ == "__main__":
     # Train
     # ------------------------------
     model = train_spectrum_predictor(
-        error_fields=error_fields,
+        mean_fields=train_mean_fields,
         t_train_low=t_train_low,
         lowk_idx=lowk_idx,
         n_epochs=40,
@@ -255,12 +257,23 @@ if __name__ == "__main__":
     )
 
     # ------------------------------
-    # Save predictions
+    # Save predictions on train data (GOF)
     # ------------------------------
     save_predictions(
         model=model,
-        error_fields=error_fields,
+        mean_fields=train_mean_fields,
         lowk_idx=lowk_idx,
         s_global=s_global,
         outfile_prefix="train",
+    )
+
+    # ------------------------------
+    # Save predictions on test data
+    # ------------------------------
+    save_predictions(
+        model=model,
+        mean_fields=test_mean_fields,
+        lowk_idx=lowk_idx,
+        s_global=s_global,
+        outfile_prefix="test",
     )

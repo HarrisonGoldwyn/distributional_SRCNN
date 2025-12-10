@@ -22,7 +22,7 @@ import plotting
 
 import matplotlib.pyplot as plt
 
-train_or_load = 'test'
+train_or_load = 'train'
 # %%
 hr_data_size = 64
 lr_data_size = 8

@@ -78,15 +78,29 @@ def import_data(
     # rescaled_mean = data_hr.mean()
     # data_hr = data_hr - rescaled_mean
     # data_lr = data_lr / raw_std - rescaled_mean
-    def normalize(data):
-        std = data.std()
-        mean = data.mean()
-        return ((data - mean) / std)
+    # def normalize(data):
+    #     std = data.std()
+    #     mean = data.mean()
+    #     return ((data - mean) / std)
     
-    normed_xtrainHR = normalize(xtrainHR)[:, None, :, :] 
-    normed_xtestHR = normalize(xtestHR)[:, None, :, :] 
-    normed_xtrainLR = normalize(xtrainLR)[:, None, :, :] 
-    normed_xtestLR = normalize(xtestLR)[:, None, :, :] 
+    # normed_xtrainHR = normalize(xtrainHR)[:, None, :, :]
+    # normed_xtestHR = normalize(xtestHR)[:, None, :, :]
+    # normed_xtrainLR = normalize(xtrainLR)[:, None, :, :]
+    # normed_xtestLR = normalize(xtestLR)[:, None, :, :]
+
+    def normalize_with_stats(data, mean, std):
+        return (data - mean) / std
+
+    mean_hr = xtrainHR.mean()
+    std_hr  = xtrainHR.std()
+    mean_lr = xtrainLR.mean()
+    std_lr  = xtrainLR.std()
+
+    normed_xtrainHR = normalize_with_stats(xtrainHR, mean_hr, std_hr)[:, None, :, :]
+    normed_xtestHR  = normalize_with_stats(xtestHR,  mean_hr, std_hr)[:, None, :, :]
+    normed_xtrainLR = normalize_with_stats(xtrainLR, mean_lr, std_lr)[:, None, :, :]
+    normed_xtestLR  = normalize_with_stats(xtestLR,  mean_lr, std_lr)[:, None, :, :]
+    
 
     return normed_xtrainHR, normed_xtestHR, normed_xtrainLR, normed_xtestLR
 

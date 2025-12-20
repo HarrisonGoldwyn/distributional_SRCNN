@@ -89,7 +89,7 @@ def import_data(
     # normed_xtestLR = normalize(xtestLR)[:, None, :, :]
 
     def normalize_with_stats(data, mean, std):
-        return (data - mean) / std
+        return ((data - mean) / std).astype(np.float32)
 
     mean_hr = xtrainHR.mean()
     std_hr  = xtrainHR.std()

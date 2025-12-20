@@ -266,5 +266,5 @@ losses = np.asarray(losses)
 
 # %%
 np.save(f'{log_file_base_path}_param_fits.npy', fit_params)
-np.save(f'{log_file_base_path}_param_fit_losses.npy', fit_params)
+np.save(f'{log_file_base_path}_param_fit_losses.npy', losses)
 

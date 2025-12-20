@@ -253,7 +253,7 @@ for img_idx in range(5):
         return _gaussian_loss_basis_cov_params(params, img_idx)
         
     minimized_params, list_of_params, loss = minimize(
-        this_loss, starting_point, epochs=150,
+        this_loss, starting_point, epochs=300,
         lr=0.1
         )
     

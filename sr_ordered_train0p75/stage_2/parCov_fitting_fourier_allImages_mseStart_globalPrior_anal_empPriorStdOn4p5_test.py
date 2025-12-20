@@ -258,7 +258,7 @@ for img_idx in range(5):
         )
     
     fit_params.append(torch.exp(minimized_params).detach().to("cpu").numpy())
-    losses.append(loss.detach().to("cpu").numpy())
+    losses.append(np.array([_loss.detach().to("cpu").numpy() for _loss in loss]))
 
 # %%
 fit_params = np.asarray(fit_params)

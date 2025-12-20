@@ -261,5 +261,9 @@ for img_idx in range(err_fields_tensor.shape[0]):
 fit_params = np.asarray(fit_params)
 
 # %%
-np.save(f'{log_file_base_path}_param_fits.npy', fit_params)
+# np.save(f'output/{log_file_base_path}_param_fits.npy', fit_params)
+out_dir = "output"
+os.makedirs(out_dir, exist_ok=True)
 
+out_path = os.path.join(out_dir, f"{os.path.basename(log_file_base_path)}_param_fits.npy")
+np.save(out_path, fit_params)

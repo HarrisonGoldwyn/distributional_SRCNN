@@ -2,9 +2,9 @@
 #SBATCH --job-name=s75S2_On4p5
 #SBATCH --output=s75S2_On4p5.log
 #SBATCH --account=ecrpstats
-#SBATCH --time=10:00:00
+#SBATCH --time=01:00:00
 #SBATCH --nodes=1
-#SBATCH --partition=gpu-h100
+#SBATCH --partition=gpu-h100s
 #SBATCH --gpus=1
 #SBATCH --mem=32GB
 #SBATCH --mail-type=ALL

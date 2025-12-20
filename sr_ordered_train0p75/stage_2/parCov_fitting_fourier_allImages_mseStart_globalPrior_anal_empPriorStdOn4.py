@@ -216,8 +216,10 @@ def _gaussian_loss_basis_cov_params(
 # %%
 def minimize(function, initial_parameters, epochs, lr=0.1):
     list_params = []
-    params = initial_parameters.to(device)
-    params.requires_grad_()
+    # params = initial_parameters.to(device)
+# params.requires_grad_()
+params = initial_parameters.clone().detach().to(device)
+params.requires_grad_()
     optimizer = torch.optim.Adam([params], lr=lr)
     losses = []
 

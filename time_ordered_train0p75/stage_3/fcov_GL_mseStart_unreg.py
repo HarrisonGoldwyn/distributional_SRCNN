@@ -139,7 +139,7 @@ try:
 except:
     pass
 
-fit_params = torch.tensor(fit_params).to(device)
+fit_params = torch.tensor(fit_params, dtype=torch.float32).to(device)
 
 ## Define basis functions
 def compl_dft_basis(x, y, k_x, k_y):

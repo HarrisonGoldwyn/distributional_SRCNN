@@ -104,6 +104,80 @@ def import_data(
 
     return normed_xtrainHR, normed_xtestHR, normed_xtrainLR, normed_xtestLR
 
+def import_data_old_norm(
+    region,
+    subregion,
+    train_fraction=.7, 
+    hr_data_size=64,
+    lr_data_size=8,
+    order='(subregion, time)'
+    ):
+
+    try:
+        data_hr = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/data/subregions_wind_u_64x64.npy")
+        data_lr = np.load("/Users/hgoldwyn/Research/projects/SR_CNN/paper_repo/data/subregions_wind_u_8x8_downscaled64x64.npy")
+    except Exception as e:
+        print("failed to find data in /Users/...:", e)
+    try:
+        data_hr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_64x64.npy",  allow_pickle=True)
+        data_lr = np.load("/projects/ecrpstats/distributional_SRCNN/data/subregions_wind_u_8x8_downscaled64x64.npy",  allow_pickle=True)
+    except Exception as e:
+        print("failed to find data in /projects/...:", e)
+
+
+    if type(subregion) == int:
+        data_hr = data_hr[region, subregion]
+        data_lr = data_lr[region, subregion]
+    
+    elif subregion == 'all':    
+        if order == '(subregion, time)':
+            ## To order by timeshape, each 4 images being the 4 subregions
+            data_hr = data_hr[region]
+            data_lr = data_lr[region]
+            # Transpose so axis 0 (4) comes after axis 1 (214)
+            data_hr = np.transpose(data_hr, (1, 0, 2, 3))  # shape (214, 4, 64, 64)
+            data_lr = np.transpose(data_lr, (1, 0, 2, 3)) 
+            # Now reshape to (214*4, 64, 64)
+            data_hr = data_hr.reshape((-1, 64, 64))  # shape (856, 64, 64)
+            data_lr = data_lr.reshape((-1, 8, 8))
+        elif order == '(time, subregion)':
+            data_hr = data_hr.reshape((5, 4*214, hr_data_size, hr_data_size))
+            data_hr = data_hr[region]
+            data_lr = data_lr.reshape((5, 4*214, lr_data_size, lr_data_size))
+            data_lr = data_lr[region]
+        else: 
+            raise ValueError("Unimplimented 'order'")
+        
+    else:
+        raise ValueError("subregion invalid")
+
+    ## Separate train and test
+    train_set_size = int(data_hr.shape[0] * train_fraction)
+    test_set_size = data_hr.shape[0] - train_set_size
+    ## Get train and test sets
+    xtrainHR = data_hr[:train_set_size].astype(np.float32)#[:, None, :, :] 
+    xtestHR = data_hr[train_set_size:train_set_size+test_set_size].astype(np.float32)#[:, None, :, :] 
+    xtrainLR = data_lr[:train_set_size].astype(np.float32)#[:, None, :, :] 
+    xtestLR = data_lr[train_set_size:train_set_size+test_set_size].astype(np.float32)#[:, None, :, :]   
+
+    # Normalize data
+    raw_std = data_hr.std()
+    data_hr = data_hr / raw_std
+    rescaled_mean = data_hr.mean()
+    data_hr = data_hr - rescaled_mean
+    data_lr = data_lr / raw_std - rescaled_mean
+    def normalize(data):
+        std = data.std()
+        mean = data.mean()
+        return ((data - mean) / std)
+    
+    normed_xtrainHR = normalize(xtrainHR)[:, None, :, :]
+    normed_xtestHR = normalize(xtestHR)[:, None, :, :]
+    normed_xtrainLR = normalize(xtrainLR)[:, None, :, :]
+    normed_xtestLR = normalize(xtestLR)[:, None, :, :]
+
+    return normed_xtrainHR, normed_xtestHR, normed_xtrainLR, normed_xtestLR
+
 
 def create_dataloader(x, y, batch_size, labels=None, train_kwargs={'shuffle':False, 'drop_last':False}):
     x = torch.from_numpy(x)

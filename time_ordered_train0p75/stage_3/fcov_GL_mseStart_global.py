@@ -128,7 +128,7 @@ scheduler = ExponentialDecayWithFloor(optimizer, decay_rate=0.95, floor=0.0001)
 
 
 ## Load fit parameters
-fit_params = np.load("../stage_2/output/anal_sln_global_params.npy")
+fit_params = np.load("../stage_2/output_2a/anal_sln_global_params.npy")
 fit_params = torch.tensor(fit_params, dtype=torch.float32).to(device)
 
 ## Define basis functions

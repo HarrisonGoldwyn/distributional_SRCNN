@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=sS2_On0p1
-#SBATCH --output=sS2_On0p1.log
+#SBATCH --job-name=sS2_On0p4
+#SBATCH --output=sS2_On0p4.log
 #SBATCH --account=ecrpstats
 #SBATCH --time=01:00:00
 #SBATCH --nodes=1
@@ -15,4 +15,4 @@ module purge
 module load conda
 
 conda activate torch
-python parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn0p1.py
+python parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn0p4.py

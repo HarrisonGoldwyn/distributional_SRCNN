@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=s_2b_k4p5
-#SBATCH --output=s_2b_k4p5.log
+#SBATCH --job-name=s_2c_k0p5
+#SBATCH --output=s_2c_k0p5.log
 #SBATCH --account=ecrpstats
 #SBATCH --time=1:00:00
 #SBATCH --nodes=1
@@ -15,4 +15,4 @@ module purge
 module load conda
 
 conda activate torch
-python stage_2b_kappa4p5.py
+python stage_2c_kappa0p5.py

@@ -201,7 +201,7 @@ if __name__ == "__main__":
     # ------------------------------
     test_mean_fields = np.load("../stage_1/output_data/mse_5l_i123_c32s_padR_schLrG0p95_reg0_testPredFields.npy")
     train_mean_fields = np.load("../stage_1/output_data/mse_5l_i123_c32s_padR_schLrG0p95_reg0_trainPredFields.npy")
-    s_train = np.load("../stage_2/output/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn0p5_param_fits.npy")
+    s_train = np.load("../stage_2/output/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn0p7_param_fits.npy")
 
     print("mean_fields shape:", train_mean_fields.shape)
     print("s_train shape:", s_train.shape)

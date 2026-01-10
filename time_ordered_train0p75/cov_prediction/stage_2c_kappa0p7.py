@@ -141,7 +141,7 @@ def gaussian_loss_basis_cov(
         ):
     
     ## Define global prior
-    prior = (global_fit_params - torch.exp(log_parmas))**2 / (global_fit_param_stdd / 0.5)**2
+    prior = (global_fit_params - torch.exp(log_parmas))**2 / (global_fit_param_stdd / 0.7)**2
     
     ## Change type of real parameters to complex for consistent typing with complex basis functions
     log_parmas = torch.complex(log_parmas, torch.zeros_like(log_parmas))

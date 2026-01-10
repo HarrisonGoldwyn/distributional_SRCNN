@@ -2,7 +2,7 @@
 #SBATCH --job-name=Gmse_fcovGL
 #SBATCH --output=Gmse_fcovGL.log
 #SBATCH --account=ecrpstats
-#SBATCH --time=10:00:00
+#SBATCH --time=00:30:00
 #SBATCH --nodes=1
 #SBATCH --partition=gpu-h100
 #SBATCH --gpus=1

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=s_2c_k0p5
-#SBATCH --output=s_2c_k0p5.log
+#SBATCH --job-name=t_2c_k0p7
+#SBATCH --output=t_2c_k0p7.log
 #SBATCH --account=ecrpstats
-#SBATCH --time=1:00:00
+#SBATCH --time=00:30:00
 #SBATCH --nodes=1
 #SBATCH --partition=gpu-h100
 #SBATCH --gpus=1
@@ -15,4 +15,4 @@ module purge
 module load conda
 
 conda activate torch
-python stage_2c_kappa0p5.py
+python stage_2c_kappa0p7.py

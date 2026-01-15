@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=tot75S2_On4
-#SBATCH --output=tot75S2_On4.log
+#SBATCH --job-name=s75S2_On4
+#SBATCH --output=s75S2_On4.log
 #SBATCH --account=ecrpstats
 #SBATCH --time=10:00:00
 #SBATCH --nodes=1

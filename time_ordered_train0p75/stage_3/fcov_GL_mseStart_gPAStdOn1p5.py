@@ -135,7 +135,7 @@ scheduler = ExponentialDecayWithFloor(optimizer, decay_rate=0.95, floor=0.0001)
 # except:
 #     pass
 try:
-    fit_params = np.load(f"/projects/ecrpstats/distributional_SRCNN/time_ordered_train0p75/stage_2/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn{scale_factor_str}_param_fits.npy")
+    fit_params = np.load(f"../stage_2/output/parCov_fitting_fourier_allImages_mseStart_globalPrior_anal_empPriorStdOn{scale_factor_str}_param_fits.npy")
 except:
     pass
 
@@ -257,7 +257,7 @@ def mse_loss(outputs, targets):
 ## ~~~~~~~~~~~
 if train_or_load == 'train':
     ## Load previous model to train off of learned weights
-    desired_file = "/projects/ecrpstats/distributional_SRCNN/time_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0/2025-05-22_t130203/499_l8.455e+01.pt"
+    desired_file = "/projects/ecrpstats/distributional_SRCNN/time_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0/2025-12-20_t162129/499_l8.359e+01.pt"
     loaded = torch.load(desired_file)
     net.load_state_dict(loaded['model_state_dict'])
     

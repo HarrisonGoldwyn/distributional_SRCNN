@@ -62,14 +62,15 @@ print(f"Using device: {device}")
 # except:
 #     pass
 try:
-    test_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0_errFields.npy")
-    train_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_1/mse_5l_i123_c32s_padR_schLrG0p95_reg0_TrainErrFields.npy")
+    #     test_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_1/output_data/mse_5l_i123_c32s_padR_schLrG0p95_reg0_errFields.npy")
+    train_mse_error_fields = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_1/output_data/mse_5l_i123_c32s_padR_schLrG0p95_reg0_TrainErrFields.npy")
 except:
     pass
 
 
 # %%
-mse_error_fields = np.concatenate((train_mse_error_fields, test_mse_error_fields), axis=0)
+# mse_error_fields = np.concatenate((train_mse_error_fields, test_mse_error_fields), axis=0)
+mse_error_fields = train_mse_error_fields
 
 
 # %% [markdown]
@@ -123,14 +124,14 @@ basis_functions_tensor = torch.tensor(basis_functions, dtype=torch.complex64).to
 ##
 ## Load parameters for global prior
 try:
-    global_fit_params = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/anal_sln_global_params.npy")
+    global_fit_params = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/output_2a/anal_sln_global_params.npy")
 except:
     pass
 
 global_fit_params = torch.tensor(global_fit_params, dtype=torch.float32).to(device)
 
 ## Load emperical standard deviation for parameter prior
-global_fit_param_stdd = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/img_spec_params_std.npy")
+global_fit_param_stdd = np.load("/projects/ecrpstats/distributional_SRCNN/sr_ordered_train0p75/stage_2/output_2a/img_spec_params_std.npy")
 global_fit_param_stdd = torch.tensor(global_fit_param_stdd).to(device)
 
 # %%
@@ -216,7 +217,9 @@ def _gaussian_loss_basis_cov_params(
 # %%
 def minimize(function, initial_parameters, epochs, lr=0.1):
     list_params = []
-    params = initial_parameters.to(device)
+    # params = initial_parameters.to(device)
+    # params.requires_grad_()
+    params = initial_parameters.clone().detach().to(device)
     params.requires_grad_()
     optimizer = torch.optim.Adam([params], lr=lr)
     losses = []
@@ -258,5 +261,9 @@ for img_idx in range(err_fields_tensor.shape[0]):
 fit_params = np.asarray(fit_params)
 
 # %%
-np.save(f'{log_file_base_path}_param_fits.npy', fit_params)
+# np.save(f'{log_file_base_path}_param_fits.npy', fit_params)
+out_dir = "output"
+os.makedirs(out_dir, exist_ok=True)
 
+out_path = os.path.join(out_dir, f"{os.path.basename(log_file_base_path)}_param_fits.npy")
+np.save(out_path, fit_params)

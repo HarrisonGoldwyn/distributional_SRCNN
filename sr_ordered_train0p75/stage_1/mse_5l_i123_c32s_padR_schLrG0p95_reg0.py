@@ -197,6 +197,7 @@ targets = targets.cpu()
 
 ## Save error fields for analysis
 error_fields = pred_mean - targets
+np.save(f'{log_file_base_path}_testPredFields', pred_mean)
 np.save(f'{log_file_base_path}_errFields', error_fields)
 
 ## Get training error fields for 2-stage model
@@ -212,6 +213,7 @@ train_pred_mean = train_pred_mean.cpu()
 train_targets = train_targets.cpu()
 ## Save error fields
 error_fields = train_pred_mean - train_targets
+np.save(f'{log_file_base_path}_trainPredFields', train_pred_mean)
 np.save(f'{log_file_base_path}_TrainErrFields', error_fields)
 
 
